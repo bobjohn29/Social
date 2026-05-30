@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vibly — Original Social Platform</title>
+<style>
+:root{
+  --bg:#f5f7fb;--card:#ffffff;--text:#121826;--muted:#687083;--line:#e5e9f2;
+  --brand:#6c5ce7;--brand2:#00cec9;--danger:#ff4d6d;--good:#22c55e;
+  --shadow:0 12px 35px rgba(20,25,40,.08);--radius:22px;
+}
+[data-theme="dark"]{
+  --bg:#0f1220;--card:#171b2e;--text:#f5f7ff;--muted:#a6adbf;--line:#2a3046;
+  --shadow:0 12px 35px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0}
+.hidden{display:none!important}
+.app{display:grid;grid-template-columns:270px minmax(0,1fr) 310px;gap:22px;max-width:1360px;margin:auto;padding:18px}
+.sidebar,.rightbar,.card,.authbox{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:var(--radius)}
+.sidebar{position:sticky;top:18px;height:calc(100vh - 36px);padding:18px;display:flex;flex-direction:column;gap:10px}
+.logo{font-size:30px;font-weight:900;letter-spacing:-1px;display:flex;gap:9px;align-items:center}
+.logo-mark{width:36px;height:36px;border-radius:13px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;color:white}
+.navbtn{display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;border-radius:16px;background:transparent;color:var(--text);font-weight:700;text-align:left}
+.navbtn:hover,.navbtn.active{background:linear-gradient(135deg,rgba(108,92,231,.15),rgba(0,206,201,.12))}
+.navbtn .dot{margin-left:auto;background:var(--danger);color:white;border-radius:20px;padding:2px 7px;font-size:12px}
+.main{min-width:0}
+.page{animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{padding:16px;margin-bottom:16px}
+.composer textarea,.composer input,.authbox input,.authbox textarea,.settings input,.settings textarea,.searchbar{
+  width:100%;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:15px;padding:12px;margin:7px 0;outline:none
+}
+textarea{resize:vertical;min-height:80px}
+.btn{background:linear-gradient(135deg,var(--brand),var(--brand2));color:white;border-radius:15px;padding:11px 15px;font-weight:800}
+.btn.secondary{background:var(--bg);color:var(--text);border:1px solid var(--line)}
+.btn.danger{background:var(--danger)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.space{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.avatar{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:white;font-weight:900;box-shadow:inset 0 0 0 3px rgba(255,255,255,.25)}
+.avatar.big{width:92px;height:92px;font-size:30px}
+.avatar.story{width:62px;height:62px;border:3px solid transparent;background-clip:padding-box;border-radius:50%}
+.badge{display:inline-grid;place-items:center;width:16px;height:16px;background:#249bff;color:white;clip-path:polygon(50% 0%,61% 26%,90% 18%,78% 48%,100% 67%,67% 70%,62% 100%,43% 75%,13% 88%,25% 57%,0 40%,34% 37%);font-size:10px;margin-left:4px}
+.post{overflow:hidden}
+.post-img{height:280px;border-radius:18px;margin-top:12px;background-size:cover;background-position:center;border:1px solid var(--line)}
+.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.action{background:var(--bg);color:var(--text);border:1px solid var(--line);padding:9px 11px;border-radius:13px;font-weight:700}
+.action.liked{color:var(--danger);animation:pop .28s ease}
+@keyframes pop{50%{transform:scale(1.22)}}
+.commentbox{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+.comment{font-size:14px;color:var(--muted);padding:6px 0}
+.stories{display:flex;gap:12px;overflow:auto;padding-bottom:4px}
+.storyitem{text-align:center;min-width:78px}
+.storyring{padding:3px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--brand2),#ffbe76)}
+.storyname{font-size:12px;color:var(--muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rightbar{position:sticky;top:18px;height:max-content;padding:16px}
+.userchip{display:flex;align-items:center;gap:10px;padding:10px;border-radius:15px}
+.userchip:hover{background:var(--bg)}
+.tabs{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.tab{padding:9px 12px;border-radius:13px;background:var(--bg);color:var(--text);border:1px solid var(--line);font-weight:700}
+.tab.active{background:var(--brand);color:white}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:20;display:grid;place-items:center;padding:20px}
+.storymodal{width:min(430px,94vw);height:680px;max-height:88vh;border-radius:28px;overflow:hidden;position:relative;color:white;background:linear-gradient(135deg,#6c5ce7,#00cec9);padding:22px;display:flex;flex-direction:column;justify-content:space-between;animation:zoom .22s ease}
+@keyframes zoom{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:none}}
+.progress{height:5px;background:rgba(255,255,255,.35);border-radius:9px;overflow:hidden}
+.progress span{display:block;height:100%;background:white;animation:fill 5s linear forwards}
+@keyframes fill{to{width:100%}}
+.storyText{font-size:32px;font-weight:900;text-align:center;line-height:1.2}
+.close{position:absolute;right:15px;top:13px;background:rgba(255,255,255,.22);color:white;border-radius:50%;width:36px;height:36px}
+.authscreen{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at top left,rgba(108,92,231,.22),transparent 35%),var(--bg)}
+.authbox{width:min(460px,95vw);padding:24px}
+.notice{padding:10px 12px;border-radius:14px;background:rgba(108,92,231,.12);color:var(--muted);font-size:14px}
+.pill{font-size:12px;padding:4px 8px;border-radius:999px;background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.mobilebar{display:none}
+.empty{color:var(--muted);text-align:center;padding:24px}
+@media(max-width:1050px){.app{grid-template-columns:230px 1fr}.rightbar{display:none}}
+@media(max-width:760px){
+  .app{display:block;padding:10px 10px 80px}.sidebar{display:none}.mobilebar{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);z-index:10;justify-content:space-around;padding:8px}
+  .mobilebar button{background:transparent;color:var(--text);font-size:22px;padding:8px}.card{border-radius:18px}.post-img{height:210px}
+}
+</style>
+</head>
+<body>
+<div id="auth" class="authscreen hidden">
+  <div class="authbox">
+    <div class="logo"><span class="logo-mark">V</span> Vibly</div>
+    <p class="notice">Sign up once with a unique username. No email, phone number, backend, or tracking. Everything is stored locally in this browser.</p>
+    <div id="authMsg" class="notice hidden"></div>
+    <input id="authUsername" maxlength="18" placeholder="Username, e.g. skywave" />
+    <input id="authDisplay" maxlength="30" placeholder="Display name, e.g. Sky Wave" />
+    <div class="row">
+      <button class="btn" onclick="register()">Sign up</button>
+      <button class="btn secondary" onclick="login()">Log in</button>
+    </div>
+  </div>
+</div>
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="logo"><span class="logo-mark">V</span> Vibly</div>
+    <button class="navbtn active" onclick="showPage('home',this)">🏠 Home</button>
+    <button class="navbtn" onclick="showPage('explore',this)">🔎 Explore</button>
+    <button class="navbtn" onclick="showPage('create',this)">➕ Create</button>
+    <button class="navbtn" onclick="showPage('stories',this)">✨ Stories</button>
+    <button class="navbtn" onclick="showPage('profile',this)">👤 Profile</button>
+    <button class="navbtn" onclick="showPage('notifications',this)">🔔 Notifications <span id="notifDot" class="dot hidden">0</span></button>
+    <button class="navbtn" onclick="showPage('settings',this)">⚙️ Settings</button>
+    <button class="navbtn" onclick="logout()">🚪 Log out</button>
+  </aside>
+  <main class="main">
+    <section id="home" class="page"></section>
+    <section id="explore" class="page hidden"></section>
+    <section id="create" class="page hidden"></section>
+    <section id="stories" class="page hidden"></section>
+    <section id="profile" class="page hidden"></section>
+    <section id="notifications" class="page hidden"></section>
+    <section id="settings" class="page hidden"></section>
+  </main>
+  <aside class="rightbar">
+    <h3>Suggested Vibers</h3>
+    <div id="suggestions"></div>
+    <h3>Verification</h3>
+    <p class="notice" id="verifyMini"></p>
+  </aside>
+</div>
+<nav class="mobilebar hidden" id="mobilebar">
+  <button onclick="showPage('home')">🏠</button><button onclick="showPage('explore')">🔎</button><button onclick="showPage('create')">➕</button>
+  <button onclick="showPage('stories')">✨</button><button onclick="showPage('profile')">👤</button><button onclick="showPage('notifications')">🔔</button>
+</nav>
+<div id="modal" class="modal hidden"></div>
+<script>
+/* Vibly: original single-file demo social app using localStorage only. */
+const KEY="vibly_single_file_app_v1";
+let state,currentUser,activeProfile=null,exploreFilter="posts";
+
+const demoUsers=[
+ {id:"u_luma",username:"luma",display:"Luma Vale",bio:"Gradient gardener and tiny idea collector.",color:"#6c5ce7",verified:true,followers:182,following:64},
+ {id:"u_nova",username:"novapixel",display:"Nova Pixel",bio:"Making little loops, sketches, and good mornings.",color:"#00cec9",verified:true,followers:244,following:91},
+ {id:"u_moss",username:"mossnote",display:"Moss Note",bio:"Soft hikes, quiet playlists, warm tea.",color:"#22c55e",verified:false,followers:89,following:48},
+ {id:"u_ember",username:"emberlane",display:"Ember Lane",bio:"Food experiments without secret ingredients.",color:"#ff7675",verified:false,followers:121,following:57}
+];
+
+function seed(){
+ return {
+  users:demoUsers,
+  reserved:demoUsers.map(u=>u.username),
+  session:null,
+  posts:[
+   post("u_luma","Today’s tiny win: I finally organized my desk into a calm little launchpad. #workspace #focus","linear-gradient(135deg,#6c5ce7,#00cec9)",6,2),
+   post("u_nova","A loop idea: sunrise colors moving across simple shapes. No fancy assets, just vibes. #design #motion","linear-gradient(135deg,#fd79a8,#fdcb6e)",10,4),
+   post("u_moss","Reminder: a slow walk still counts as progress. #nature #gentle",null,7,1),
+   post("u_ember","Tested a cozy bowl recipe with rice, beans, greens, and citrus. Cheap, bright, excellent. #food", "linear-gradient(135deg,#ff7675,#ffeaa7)",4,3)
+  ],
+  stories:[
+   story("u_luma","New workspace energy ✨","linear-gradient(135deg,#6c5ce7,#00cec9)"),
+   story("u_nova","Sketching with circles today","linear-gradient(135deg,#fd79a8,#a29bfe)"),
+   story("u_moss","Clouds looked like cotton islands","linear-gradient(135deg,#55efc4,#74b9ff)")
+  ],
+  notifications:[],
+  theme:"light"
+ };
+}
+function post(user,text,visual,likes,reposts){
+ return {id:uid(),user,text,visual:imageSafe(visual),created:Date.now()-Math.random()*90000000,likes:demoUsers.slice(0,likes%4).map(u=>u.id),reposts:demoUsers.slice(0,reposts%4).map(u=>u.id),saves:[],comments:[]};
+}
+function story(user,text,bg){return{id:uid(),user,text,bg,created:Date.now()}}
+function uid(){return"v_"+Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function load(){state=JSON.parse(localStorage.getItem(KEY)||"null")||seed();document.documentElement.dataset.theme=state.theme||"light";currentUser=state.users.find(u=>u.id===state.session)}
+function me(){return state.users.find(u=>u.id===currentUser?.id)}
+function user(id){return state.users.find(u=>u.id===id)}
+function init(){load();currentUser?openApp():openAuth()}
+function openAuth(){auth.classList.remove("hidden");app.classList.add("hidden");mobilebar.classList.add("hidden")}
+function openApp(){auth.classList.add("hidden");app.classList.remove("hidden");mobilebar.classList.remove("hidden");renderAll()}
+function msg(t){authMsg.textContent=t;authMsg.classList.remove("hidden")}
+function cleanName(v){return v.trim().toLowerCase().replace(/[^a-z0-9_]/g,"").slice(0,18)}
+function register(){
+ const username=cleanName(authUsername.value), display=(authDisplay.value.trim()||username).slice(0,30);
+ if(username.length<3)return msg("Username must be at least 3 characters.");
+ if(state.reserved.includes(username))return msg("That username is already taken on this device.");
+ const u={id:uid(),username,display,bio:"New to Vibly. Sharing small sparks.",color:randColor(),verified:false,verifyStatus:"Not verified",followers:0,following:0,followingIds:[]};
+ state.users.push(u);state.reserved.push(username);state.session=u.id;currentUser=u;save();openApp();
+}
+function login(){
+ const username=cleanName(authUsername.value);
+ const u=state.users.find(x=>x.username===username && !demoUsers.some(d=>d.username===x.username));
+ if(!u)return msg("No local account found for that username. Sign up first on this browser.");
+ state.session=u.id;currentUser=u;save();openApp();
+}
+function logout(){state.session=null;currentUser=null;save();openAuth()}
+function randColor(){return["#6c5ce7","#00cec9","#fd79a8","#ff7675","#22c55e","#0984e3"][Math.floor(Math.random()*6)]}
+function initials(u){return (u.display||u.username).split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}
+function avatar(u,cls=""){return`<div class="avatar ${cls}" style="background:${u.color}">${initials(u)}</div>`}
+function nameLine(u){return`<b>${u.display}</b>${u.verified?'<span class="badge">✓</span>':''}<br><span class="pill">@${u.username}</span>`}
+function imageSafe(v){return v||null}
+
+function showPage(id,btn){
+ document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+ document.querySelectorAll(".navbtn").forEach(b=>b.classList.remove("active"));
+ if(btn)btn.classList.add("active");
+ if(id==="profile")activeProfile=me().id;
+ renderAll();
+}
+function renderAll(){renderHome();renderExplore();renderCreate();renderStoriesPage();renderProfile();renderNotifications();renderSettings();renderSuggestions();renderVerifyMini();save()}
+function renderStoriesBar(){
+ return `<div class="card"><div class="space"><h3>Stories</h3><button class="btn secondary" onclick="showPage('stories')">Add/View</button></div><div class="stories">
+ ${state.stories.map(s=>{let u=user(s.user);return`<div class="storyitem" onclick="viewStory('${s.id}')"><div class="storyring">${avatar(u,"story")}</div><div class="storyname">${u.username}</div></div>`}).join("")}
+ </div></div>`;
+}
+function renderHome(){
+ home.innerHTML=renderStoriesBar()+`<div class="card composer"><h3>Create a post</h3><textarea id="quickText" placeholder="What is vibing today?"></textarea><input id="quickImg" placeholder="Optional image URL or leave blank for text only"><button class="btn" onclick="createPost('quickText','quickImg')">Post</button></div>`+feed(state.posts);
+}
+function feed(posts){
+return posts.sort((a,b)=>b.created-a.created).map(p=>renderPost(p)).join(””)||<div class="card empty">Nothing here yet.</div>;
+}
+function renderPost(p){
+const u=user(p.user), liked=p.likes.includes(me().id), saved=p.saves.includes(me().id), reposted=p.reposts.includes(me().id);
+const visual=p.visual?<div class="post-img" style="background:${p.visual.startsWith('http')?url(’${p.visual}’):p.visual}"></div>:””;
+return `${avatar(u)}${nameLine(u)}${timeAgo(p.created)} <p>${linkTags(escapeHtml(p.text))}</p>${visual}
+ <div class="actions">
+  <button class="action ${liked?'liked':''}" onclick="toggleLike('${p.id}')">♥ ${p.likes.length}</button>
+  <button class="action ${reposted?'liked':''}" onclick="toggleRepost('${p.id}')">↻ ${p.reposts.length}</button>
+  <button class="action" onclick="toggleComments('${p.id}')">💬 ${p.comments.length}</button>
+  <button class="action ${saved?'liked':''}" onclick="toggleSave('${p.id}')">🔖 ${saved?'Saved':'Save'}</button>
+ </div>
+ <div id="comments_${p.id}" class="commentbox hidden">
+  ${p.comments.map(c=>`<div class="comment"><b>@${user(c.user)?.username||"user"}:</b> ${escapeHtml(c.text)}</div>`).join("")}
+  <div class="row"><input id="comment_${p.id}" placeholder="Write a comment..." style="flex:1;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--bg);color:var(--text)"><button class="btn secondary" onclick="addComment('${p.id}')">Send</button></div>
+ </div></article>`;
+}
+function createPost(textId,imgId){
+ const text=document.getElementById(textId).value.trim(), img=document.getElementById(imgId).value.trim();
+ if(!text)return alert("Write something first.");
+ state.posts.push({id:uid(),user:me().id,text,visual:img||null,created:Date.now(),likes:[],reposts:[],saves:[],comments:[]});
+ document.getElementById(textId).value="";document.getElementById(imgId).value="";renderAll();showPage("home");
+}
+function toggleLike(id){let p=state.posts.find(x=>x.id===id),i=p.likes.indexOf(me().id);i>-1?p.likes.splice(i,1):(p.likes.push(me().id),notify(p.user,"liked your post"));renderAll()}
+function toggleRepost(id){let p=state.posts.find(x=>x.id===id),i=p.reposts.indexOf(me().id);i>-1?p.reposts.splice(i,1):(p.reposts.push(me().id),notify(p.user,"reposted your post"));renderAll()}
+function toggleSave(id){let p=state.posts.find(x=>x.id===id),i=p.saves.indexOf(me().id);i>-1?p.saves.splice(i,1):p.saves.push(me().id);renderAll()}
+function toggleComments(id){document.getElementById("comments_"+id)?.classList.toggle("hidden")}
+function addComment(id){let input=document.getElementById("comment_"+id),t=input.value.trim();if(!t)return;let p=state.posts.find(x=>x.id===id);p.comments.push({user:me().id,text:t,created:Date.now()});notify(p.user,"commented on your post");renderAll();setTimeout(()=>toggleComments(id),0)}
+function notify(to,text){if(to===me().id)return;state.notifications.unshift({id:uid(),to,from:me().id,text,created:Date.now(),read:false})}
+function timeAgo(t){let m=Math.floor((Date.now()-t)/60000);return m<1?"now":m<60?m+"m":m<1440?Math.floor(m/60)+"h":Math.floor(m/1440)+"d"}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+function linkTags(s){return s.replace(/#(\w+)/g,'<span class="pill">#$1</span>')}
+function renderCreate(){
+create.innerHTML=<div class="card composer"><h2>Create</h2><textarea id="createText" placeholder="Share a thought, update, mini blog, or vibe..."></textarea><input id="createImg" placeholder="Optional image URL"><button class="btn" onclick="createPost('createText','createImg')">Publish Post</button></div>;
+}
+function renderStoriesPage(){
+stories.innerHTML=<div class="card"><h2>Stories</h2><input id="storyText" placeholder="Story text"><select id="storyBg"><option value="linear-gradient(135deg,#6c5ce7,#00cec9)">Aurora</option><option value="linear-gradient(135deg,#fd79a8,#fdcb6e)">Sunset</option><option value="linear-gradient(135deg,#55efc4,#74b9ff)">Ocean</option><option value="linear-gradient(135deg,#2d3436,#636e72)">Night</option></select><button class="btn" onclick="addStory()">Add story</button></div>+renderStoriesBar();
+}
+function addStory(){let t=storyText.value.trim();if(!t)return alert(“Add story text.”);state.stories.unshift(story(me().id,t,storyBg.value));renderAll()}
+function viewStory(id){
+const s=state.stories.find(x=>x.id===id),u=user(s.user);
+modal.innerHTML=<div class="storymodal" style="background:${s.bg}"><button class="close" onclick="closeModal()">×</button><div><div class="progress"><span style="width:0"></span></div><div class="row" style="margin-top:14px">${avatar(u)}<div>${nameLine(u)}</div></div></div><div class="storyText">${escapeHtml(s.text)}</div><div class="notice" style="color:white;background:rgba(255,255,255,.18)">Original placeholder story • Vibly</div></div>;
+modal.classList.remove(“hidden”);setTimeout(closeModal,5100);
+}
+function closeModal(){modal.classList.add(“hidden”);modal.innerHTML=””}
+
+function openProfile(id){activeProfile=id;showPage(“profile”)}
+function renderProfile(){
+const u=user(activeProfile||me().id), mine=u.id===me().id, posts=state.posts.filter(p=>p.user===u.id), liked=state.posts.filter(p=>p.likes.includes(u.id)), reposted=state.posts.filter(p=>p.reposts.includes(u.id));
+profile.innerHTML=`${avatar(u,“big”)}${u.display}${u.verified?’✓’:’’}@${u.username}${escapeHtml(u.bio||””)}${mine?’Edit’:followBtn(u)} <div class="row"><span class="pill">♥ ${posts.reduce((n,p)=>n+p.likes.length,0)} total likes</span><span class="pill">${u.followers||0} followers</span><span class="pill">${u.followingIds?.length||u.following||0} following</span><span class="pill">${u.verifyStatus||u.verified?'Verified':'Not verified'}</span></div></div>
+ <div class="tabs"><button class="tab active" onclick="profileTab('posts')">Posts</button><button class="tab" onclick="profileTab('liked')">Liked</button><button class="tab" onclick="profileTab('reposted')">Reposted</button></div><div id="profileFeed">${feed(posts)}</div>`;
+ window.profileData={posts,liked,reposted};
+}
+function profileTab(k){document.querySelectorAll("#profile .tab").forEach(b=>b.classList.remove("active"));event.target.classList.add("active");profileFeed.innerHTML=feed(window.profileData[k])}
+function followBtn(u){let f=me().followingIds||[];return`<button class="btn ${f.includes(u.id)?'secondary':''}" onclick="toggleFollow('${u.id}')">${f.includes(u.id)?"Unfollow":"Follow"}</button>`}
+function toggleFollow(id){let m=me();m.followingIds=m.followingIds||[];let i=m.followingIds.indexOf(id),u=user(id);if(i>-1){m.followingIds.splice(i,1);u.followers=Math.max(0,(u.followers||0)-1)}else{m.followingIds.push(id);u.followers=(u.followers||0)+1;notify(id,"started following you")}renderAll()}
+function renderExplore(){
+let q=(document.getElementById(“exploreSearch”)?.value||””).toLowerCase();
+let posts=state.posts.filter(p=>p.text.toLowerCase().includes(q)||user(p.user).username.includes(q));
+let users=state.users.filter(u=>u.username.includes(q)||u.display.toLowerCase().includes(q));
+if(exploreFilter===“hashtags”)posts=posts.filter(p=>/#\w+/.test(p.text));
+explore.innerHTML=<div class="card"><h2>Explore</h2><input id="exploreSearch" class="searchbar" placeholder="Search posts, users, or hashtags" oninput="renderExplore()" value="${escapeHtml(q)}"><div class="tabs"><button class="tab ${exploreFilter==="posts"?'active':''}" onclick="setFilter('posts')">Posts</button><button class="tab ${exploreFilter==="users"?'active':''}" onclick="setFilter('users')">Users</button><button class="tab ${exploreFilter==="hashtags"?'active':''}" onclick="setFilter('hashtags')">Hashtags</button></div></div>+
+(exploreFilter===“users”?users.map(renderUserCard).join(””)||<div class="card empty">No users found.</div>:feed(posts.sort((a,b)=>(b.likes.length+b.comments.length+b.reposts.length)-(a.likes.length+a.comments.length+a.reposts.length))))+
+<div class="card"><h3>Suggested users</h3>${state.users.filter(u=>u.id!==me().id).map(renderUserCard).join("")}</div>;
+}
+function setFilter(f){exploreFilter=f;renderExplore()}
+function renderUserCard(u){return<div class="card userchip"><div onclick="openProfile('${u.id}')" class="row" style="flex:1">${avatar(u)}<div>${nameLine(u)}<p style="margin:5px 0;color:var(--muted)">${escapeHtml(u.bio||"")}</p></div></div>${u.id!==me().id?followBtn(u):""}</div>}
+function renderSuggestions(){suggestions.innerHTML=state.users.filter(u=>u.id!==me().id).slice(0,4).map(u=><div class="userchip"><div onclick="openProfile('${u.id}')" class="row" style="flex:1">${avatar(u)}<div>${nameLine(u)}</div></div>${followBtn(u)}</div>).join(””)}
+function renderNotifications(){
+const mine=state.notifications.filter(n=>n.to===me().id);notifDot.textContent=mine.filter(n=>!n.read).length;notifDot.classList.toggle(“hidden”,!mine.some(n=>!n.read));
+notifications.innerHTML=<div class="card space"><h2>Notifications</h2><button class="btn secondary" onclick="markRead()">Mark read</button></div>+(mine.map(n=><div class="card"><div class="row">${avatar(user(n.from))}<div><b>@${user(n.from).username}</b> ${n.text}<br><span class="pill">${timeAgo(n.created)} ago</span></div></div></div>).join(””)||<div class="card empty">No notifications yet.</div>);
+}
+function markRead(){state.notifications.forEach(n=>{if(n.to===me().id)n.read=true});renderAll()}
+
+function renderSettings(){
+const u=me();
+settings.innerHTML=`Settings <h3>Edit profile</h3><input id="setDisplay" value="${escapeHtml(u.display)}"><textarea id="setBio">${escapeHtml(u.bio||"")}</textarea><input id="setColor" type="color" value="${u.color}"><button class="btn" onclick="saveProfile()">Save profile</button>
+ <h3>Verification</h3><p class="notice">Status: <b>${u.verified?"Verified":u.verifyStatus||"Not verified"}</b>. Vibly uses an original blue diamond-check CSS badge for verified profiles.</p><textarea id="verifyReason" placeholder="Why should this local profile be verified?"></textarea><button class="btn secondary" onclick="requestVerify()">Request verification</button>
+ <h3>Appearance</h3><button class="btn secondary" onclick="toggleTheme()">Toggle dark/light mode</button>
+ <h3>Account</h3><button class="btn secondary" onclick="logout()">Log out</button> <button class="btn danger" onclick="clearData()">Clear all local data</button></div>`;
+}
+function saveProfile(){let u=me();u.display=setDisplay.value.trim()||u.username;u.bio=setBio.value.trim();u.color=setColor.value;renderAll();showPage("profile")}
+function requestVerify(){let u=me(),r=verifyReason.value.trim();if(r.length<10)return alert("Please add a short reason.");u.verifyStatus="Pending";setTimeout(()=>{u.verified=true;u.verifyStatus="Verified";save();renderAll()},800);renderAll();alert("Verification request submitted. This demo approves it locally.")}
+function renderVerifyMini(){let u=me();verifyMini.innerHTML=`${u.verified?"Verified":u.verifyStatus||"Not verified"} — request verification in Settings.`}
+function toggleTheme(){state.theme=state.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=state.theme;save();renderAll()}
+function clearData(){if(confirm("Clear all Vibly local data and return to the sign-up screen?")){localStorage.removeItem(KEY);init()}}
+init();
+</script>
+</body>
+</html>
