@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Velora</title>
+<link rel="stylesheet" href="velora-style.css?v=17">
+</head>
+<body>
+
+    <div id="splash">
+        <div id="logo">VELORA</div>
+    </div>
+
+    <div id="loading-screen">
+        <div class="loading-circle"></div>
+    </div>
+
+    <div id="welcome-page">
+        <div class="slides" id="slides">
+            <section class="slide">
+                <div class="game-grid" id="gameGrid"></div>
+                <h1 class="welcome-title">Experience User-Generated Games</h1>
+                <p class="welcome-text">Explore unique games created by Velora users.</p>
+            </section>
+
+            <section class="slide">
+                <div class="studio-preview">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+
+                <h1 class="welcome-title">Create Your Own Worlds</h1>
+                <p class="welcome-text">Use Velora Studio to build games, levels, and ideas.</p>
+            </section>
+
+            <section class="slide">
+                <div class="share-preview">V</div>
+                <h1 class="welcome-title">Share With Friends</h1>
+                <p class="welcome-text">Publish your games and let other people play them.</p>
+            </section>
+        </div>
+
+        <div class="dots">
+            <div class="dot active" id="dot0"></div>
+            <div class="dot" id="dot1"></div>
+            <div class="dot" id="dot2"></div>
+        </div>
+
+        <div class="bottom-buttons">
+            <button class="login-btn" onclick="showLogin()">Log in</button>
+            <button class="signup-btn" onclick="showSignup()">Sign up</button>
+        </div>
+    </div>
+
+    <div id="login-page">
+        <div class="auth-title">LOGIN</div>
+
+        <input class="input-box" id="loginUsername" placeholder="Username/Email/Phone">
+        <input class="input-box" id="loginPassword" placeholder="Password" type="password">
+
+        <div class="error-text auth-error" id="loginError">Wrong username or password.</div>
+
+        <div class="auth-buttons">
+            <button class="cancel-button" onclick="showWelcome()">Cancel</button>
+            <button class="blue-button" onclick="loginAccount()">Log in</button>
+        </div>
+
+        <div class="small-center">
+            Not a member? <span onclick="showSignup()">Sign Up</span>
+        </div>
+
+        <div class="forgot" onclick="infiniteLoad()">Forgot password or username?</div>
+    </div>
+
+    <div id="signup-page">
+        <div class="auth-top">
+            <div class="auth-title">SIGNUP</div>
+            <button onclick="showLogin()">LOGIN</button>
+        </div>
+
+        <div class="birthday-label">Birthday</div>
+
+        <div class="birthday-row">
+            <select id="birthMonth">
+                <option value="">Month</option>
+                <option>Jan.</option>
+                <option>Feb.</option>
+                <option>Mar.</option>
+                <option>Apr.</option>
+                <option>May</option>
+                <option>Jun.</option>
+                <option>Jul.</option>
+                <option>Aug.</option>
+                <option>Sep.</option>
+                <option>Oct.</option>
+                <option>Nov.</option>
+                <option>Dec.</option>
+            </select>
+
+            <select id="birthDay">
+                <option value="">--</option>
+            </select>
+
+            <select id="birthYear">
+                <option value="">----</option>
+            </select>
+        </div>
+
+        <input class="input-box" id="signupUsername" maxlength="20" placeholder="Username (not your real name)">
+        <div class="error-text" id="usernameError">Need at least 3 characters.</div>
+
+        <input class="input-box" id="signupPassword" type="password" placeholder="Password">
+        <div class="error-text" id="passwordError">Password needs at least 8 characters.</div>
+
+        <input class="input-box" id="confirmPassword" type="password" placeholder="Confirm password">
+        <div class="error-text" id="confirmError">Passwords do not match.</div>
+
+        <div class="gender-row">
+            <button>Gender</button>
+            <button id="maleButton" onclick="selectGender('male')">♂</button>
+            <button id="femaleButton" onclick="selectGender('female')">♀</button>
+        </div>
+
+        <div class="terms-row">
+            <input type="checkbox" id="termsCheck">
+            <div>
+                By tapping here, you are agreeing to the
+                <span onclick="infiniteLoad()">Terms of Service</span>
+                and
+                <span onclick="infiniteLoad()">Privacy Policy</span>
+            </div>
+        </div>
+
+        <div class="error-text auth-error" id="signupError">Please complete all fields correctly.</div>
+
+        <div class="auth-buttons">
+            <button class="cancel-button" onclick="showWelcome()">Cancel</button>
+            <button class="blue-button" onclick="createAccount()">Sign Up</button>
+        </div>
+    </div>
+
+    <div id="home-page">
+        <div class="roblox-top-bar">
+            <div class="top-title">Home</div>
+            <div class="top-icons">
+                <span>⌕</span>
+                <span>R$</span>
+                <span>▤</span>
+            </div>
+        </div>
+
+        <div class="home-content">
+            <h1 class="home-username" id="homeUsername">Username</h1>
+
+            <div class="section-header">
+                <span id="friendsText">Friends (0)</span>
+                <button>See All</button>
+            </div>
+
+            <div class="friends-box">
+                <button class="add-friend-button">♙+</button>
+                <div class="friends-empty">Velora is more fun with friends!</div>
+            </div>
+
+            <div class="section-header">
+                <span>Continue Playing</span>
+                <button>See All</button>
+            </div>
+
+            <div class="empty-games-row">
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+            </div>
+
+            <div class="section-header">
+                <span>Favorites</span>
+                <button>See All</button>
+            </div>
+
+            <div class="empty-games-row">
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+            </div>
+
+            <div class="section-header">
+                <span>Recommended For You</span>
+                <button>See All</button>
+            </div>
+
+            <div class="empty-games-row">
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+            </div>
+
+            <div class="section-header">
+                <span>Top Rated</span>
+                <button>See All</button>
+            </div>
+
+            <div class="empty-games-row">
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+            </div>
+
+            <div class="section-header">
+                <span>New</span>
+                <button>See All</button>
+            </div>
+
+            <div class="empty-games-row">
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+                <div class="empty-card"></div>
+            </div>
+        </div>
+        <div class="roblox-nav">
+            <button class="active" onclick="showHome()">⌂<span>HOME</span></button>
+            <button onclick="showGames()">▱<span>GAMES</span></button>
+            <button onclick="infiniteLoad()">♙<span>AVATAR</span></button>
+            <button onclick="infiniteLoad()">☷<span>CHAT</span></button>
+            <button onclick="infiniteLoad()">…<span>MORE</span></button>
+        </div>
+    </div>
+
+    <div id="games-page">
+        <div class="games-top-bar">
+            <div class="games-title-block">
+                <div class="games-title">Games</div>
+                <div class="games-username" id="gamesUsername">Username</div>
+            </div>
+
+            <div class="games-top-icons">
+                <span class="search-icon">⌕</span>
+                <span class="currency-icon">R$</span>
+                <span class="menu-icon">▤</span>
+            </div>
+        </div>
+
+        <div class="games-content">
+            <button class="games-filter" onclick="infiniteLoad()">
+                <span>Default</span>
+                <span>⌄</span>
+            </button>
+
+            <div id="gamesSections"></div>
+        </div>
+
+        <div class="roblox-nav">
+            <button onclick="showHome()">⌂<span>HOME</span></button>
+            <button class="active" onclick="showGames()">▱<span>GAMES</span></button>
+            <button onclick="infiniteLoad()">♙<span>AVATAR</span></button>
+            <button onclick="infiniteLoad()">☷<span>CHAT</span></button>
+            <button onclick="infiniteLoad()">…<span>MORE</span></button>
+        </div>
+    </div>
+
+<script src="velora-core.js?v=12"></script>
+</body>
+</html>
