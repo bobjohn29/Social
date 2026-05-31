@@ -356,31 +356,33 @@ select {
 }
 
 .roblox-top-bar {
-    height: 28px;
+    height: 70px;
     background: #0079bd;
     color: white;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
+    padding-bottom: 12px;
     position: relative;
 }
 
 .top-title {
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 20px;
+    font-weight: 700;
 }
 
 .top-icons {
     position: absolute;
-    right: 7px;
+    right: 12px;
+    bottom: 16px;
     display: flex;
-    gap: 7px;
-    font-size: 12px;
+    gap: 12px;
+    font-size: 18px;
     align-items: center;
 }
 
 .home-content {
-    height: calc(100dvh - 28px - 52px);
+    height: calc(100dvh - 70px - 70px);
     overflow-y: auto;
     background: #dcdcdc;
 }
@@ -474,7 +476,7 @@ select {
     border: none;
     background: white;
     color: #8c8c8c;
-    font-size: 16px;
+    font-size: 22px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -482,8 +484,9 @@ select {
 }
 
 .roblox-nav button span {
-    font-size: 8px;
-    margin-top: 1px;
+    font-size: 10px;
+    margin-top: 3px;
+    font-weight: 500;
 }
 
 .roblox-nav button.active {
