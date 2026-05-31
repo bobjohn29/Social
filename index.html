@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vibly</title>
+<style>
+:root{
+  --bg:#f6f7fb;--card:#fff;--soft:#eef1f7;--text:#151823;--muted:#71798a;--line:#dde3ee;
+  --accent:#635bff;--accent2:#12b886;--danger:#ff4d6d;--shadow:0 14px 35px rgba(20,30,70,.10)
+}
+[data-theme="dark"]{
+  --bg:#0e1220;--card:#171d2d;--soft:#222a3d;--text:#f6f7ff;--muted:#a8b1c3;--line:#2f394f;
+  --shadow:0 14px 35px rgba(0,0,0,.35)
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea{font:inherit}
+button{border:0;cursor:pointer}
+.hidden{display:none!important}
+.app{max-width:1180px;margin:auto;min-height:100vh;display:grid;grid-template-columns:230px 1fr;gap:18px;padding:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}
+.logo{display:flex;align-items:center;gap:10px;font-size:29px;font-weight:950;letter-spacing:-1px}
+.logo span{width:42px;height:42px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:white}
+.sidebar{position:sticky;top:18px;height:calc(100vh - 36px);padding:18px}
+.nav{margin-top:22px;display:grid;gap:7px}
+.nav button{background:transparent;color:var(--text);padding:13px 14px;border-radius:16px;text-align:left;font-weight:800}
+.nav button.active,.nav button:hover{background:var(--soft)}
+.main{min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.top h2{margin:0}
+.btn{padding:10px 14px;border-radius:15px;background:linear-gradient(135deg,var(--accent),#857cff);color:white;font-weight:850}
+.btn.ghost{background:var(--soft);color:var(--text);border:1px solid var(--line)}
+.btn.danger{background:var(--danger)}
+.input,textarea{width:100%;border:1px solid var(--line);background:var(--soft);color:var(--text);border-radius:16px;padding:12px;outline:none}
+textarea{resize:vertical;min-height:92px}
+.row{display:flex;gap:10px;align-items:center}
+.space{justify-content:space-between}
+.avatar{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:white;font-weight:950;flex:none}
+.big{width:92px;height:92px;font-size:34px}
+.click{cursor:pointer}
+.small{font-size:13px;color:var(--muted)}
+.panel{padding:16px;margin-bottom:14px}
+.post{padding:15px;margin-bottom:14px}
+.post-head{display:flex;justify-content:space-between;gap:10px}
+.name{font-weight:900}.user{color:var(--muted);font-size:14px}
+.text{white-space:pre-wrap;line-height:1.45}
+.media{margin-top:12px;min-height:220px;border-radius:20px;display:grid;place-items:center;text-align:center;color:white;font-size:23px;font-weight:950;padding:22px;overflow:hidden;background:linear-gradient(135deg,#635bff,#12b886)}
+.media img{width:100%;max-height:480px;object-fit:cover;border-radius:18px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.action{background:var(--soft);color:var(--text);border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-weight:800}
+.liked{color:#ff4d6d}.saved{color:#f7b500}
+.comments{border-top:1px solid var(--line);margin-top:12px;padding-top:10px}
+.comment{background:var(--soft);padding:9px 11px;border-radius:14px;margin:7px 0}
+.stories{display:flex;gap:11px;overflow:auto;padding:14px;margin-bottom:14px;scrollbar-width:none}
+.stories::-webkit-scrollbar{display:none}
+.story{min-width:78px;text-align:center;cursor:pointer}
+.ring{width:66px;height:66px;border-radius:50%;padding:3px;background:conic-gradient(var(--accent),var(--accent2),#ff4d6d,var(--accent));margin:auto}
+.face{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;color:white;font-weight:950;border:3px solid var(--card)}
+.tabs{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+.tab{background:var(--soft);color:var(--text);border:1px solid var(--line);padding:10px 13px;border-radius:999px;font-weight:850}
+.tab.active{background:var(--accent);color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.user-card{padding:14px}
+.check{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#2f9bff;color:white;font-size:12px;margin-left:4px}
+.stat{flex:1;background:var(--soft);border-radius:17px;padding:12px;text-align:center}
+.auth{min-height:100vh;display:grid;place-items:center;padding:20px}
+.authbox{width:min(520px,100%);padding:26px}
+.mobile{display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:9;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:25px;padding:7px}
+.mobile button{flex:1;background:transparent;color:var(--muted);border-radius:18px;padding:8px 3px;font-size:19px}
+.mobile button span{display:block;font-size:10px;font-weight:850}
+.mobile button.active{background:var(--accent);color:white}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.68);display:grid;place-items:center;z-index:20;padding:18px}
+.storybox{width:min(430px,100%);height:min(720px,90vh);border-radius:30px;padding:18px;color:white;position:relative;overflow:hidden}
+.progress{height:5px;background:rgba(255,255,255,.3);border-radius:99px;overflow:hidden;margin-bottom:12px}
+.progress i{display:block;height:100%;background:white;animation:bar 5s linear forwards}
+@keyframes bar{from{width:0}to{width:100%}}
+.storytext{height:78%;display:grid;place-items:center;text-align:center;font-size:30px;font-weight:950;padding:22px}
+.close{position:absolute;right:14px;top:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.25);color:white;font-size:20px}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:40;background:var(--text);color:var(--bg);padding:10px 14px;border-radius:999px;font-weight:850}
+@media(max-width:800px){
+  .app{display:block;padding:10px 10px 88px}.sidebar{display:none}.mobile{display:flex}.media{min-height:180px}
+}
+</style>
+</head>
+<body>
+
+<div id="auth" class="auth hidden">
+  <div class="authbox card">
+    <div class="logo"><span>V</span>Vibly</div>
+    <p class="small">Local social platform. Accounts, posts, stories, follows, likes, comments, and saves stay saved in this browser with localStorage.</p>
+    <div class="tabs">
+      <button id="loginTab" class="tab active" onclick="authTab('login')">Log in</button>
+      <button id="signupTab" class="tab" onclick="authTab('signup')">Sign up</button>
+    </div>
+    <div id="loginBox">
+      <input class="input" id="loginUser" placeholder="Username">
+      <br><br>
+      <input class="input" id="loginPass" type="password" placeholder="Password">
+      <br><br>
+      <button class="btn" onclick="login()">Log in</button>
+    </div>
+    <div id="signupBox" class="hidden">
+      <input class="input" id="regDisplay" placeholder="Display name">
+      <br><br>
+      <input class="input" id="regUser" placeholder="Unique username">
+      <br><br>
+      <input class="input" id="regPass" type="password" placeholder="Password">
+      <br><br>
+      <button class="btn" onclick="register()">Create account</button>
+    </div>
+    <p id="authMsg" class="small"></p>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+  <aside class="sidebar card">
+    <div class="logo"><span>V</span>Vibly</div>
+    <nav id="nav" class="nav"></nav>
+    <br>
+    <button class="btn ghost" onclick="logout()">Log out</button>
+  </aside>
+
+  <main class="main">
+    <div class="top">
+      <div>
+        <h2 id="title">Home</h2>
+        <div id="hello" class="small"></div>
+      </div>
+      <button class="btn" onclick="showPage('create')">New</button>
+    </div>
+
+    <section id="homePage" class="page">
+      <div id="storyBar" class="stories card"></div>
+      <div id="feed"></div>
+    </section>
+
+    <section id="createPage" class="page hidden">
+      <div class="panel card">
+        <h3>Create</h3>
+        <p class="small">Post updates to the feed or add a WhatsApp-style status story.</p>
+        <div class="tabs">
+          <button id="postCreateTab" class="tab active" onclick="createTab('post')">Post</button>
+          <button id="storyCreateTab" class="tab" onclick="createTab('story')">Story</button>
+        </div>
+
+        <div id="postCreator">
+          <textarea id="postText" placeholder="Write a post..."></textarea>
+          <br><br>
+          <input class="input" id="postImage" placeholder="Optional image URL">
+          <br><br>
+          <div class="tabs">
+            <button class="tab active effect" onclick="setEffect('aurora',this)">Aurora</button>
+            <button class="tab effect" onclick="setEffect('sunset',this)">Sunset</button>
+            <button class="tab effect" onclick="setEffect('ocean',this)">Ocean</button>
+          </div>
+          <button class="btn" onclick="createPost()">Publish post</button>
+        </div>
+
+        <div id="storyCreator" class="hidden">
+          <textarea id="storyText" placeholder="Write a status story..."></textarea>
+          <br><br>
+          <div class="tabs">
+            <button class="tab active storyEffect" onclick="setStoryEffect('aurora',this)">Aurora</button>
+            <button class="tab storyEffect" onclick="setStoryEffect('sunset',this)">Sunset</button>
+            <button class="tab storyEffect" onclick="setStoryEffect('ocean',this)">Ocean</button>
+          </div>
+          <button class="btn" onclick="createStory()">Add story</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="searchPage" class="page hidden">
+      <div class="panel card">
+        <input class="input" id="searchInput" placeholder="Search users, posts, or #tags" oninput="renderSearch()">
+      </div>
+      <div id="searchResults"></div>
+    </section>
+
+    <section id="profilePage" class="page hidden"></section>
+    <section id="alertsPage" class="page hidden"></section>
+    <section id="settingsPage" class="page hidden"></section>
+  </main>
+</div>
+
+<div id="mobileNav" class="mobile hidden"></div>
+<div id="modal"></div>
+<div id="toast"></div>
+
+<script>
+const KEY="vibly_platform_saved_v3";
+let state=load();
+let currentUser=localStorage.getItem("vibly_current_user")||null;
+let page="home", profileId=null, effect="aurora", storyEffect="aurora";
+
+const gradients={
+  aurora:"linear-gradient(135deg,#635bff,#12b886)",
+  sunset:"linear-gradient(135deg,#ff7a59,#ffca3a)",
+  ocean:"linear-gradient(135deg,#118ab2,#073b4c)"
+};
+
+function load(){
+  const data=localStorage.getItem(KEY);
+  return data?JSON.parse(data):{users:[],posts:[],stories:[],notes:[],used:[],theme:"light"};
+}
+function save(){state.users.forEach(u=>u.verified=u.followers.length>=100);localStorage.setItem(KEY,JSON.stringify(state))}
+function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}
+function now(){return new Date().toLocaleString()}
+function me(){return state.users.find(u=>u.id===currentUser)}
+function user(id){return state.users.find(u=>u.id===id)}
+function clean(v){return v.trim().toLowerCase().replace(/[^a-z0-9_]/g,"")}
+function esc(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function initials(u){return (u.display||u.username||"?").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase()}
+function avatar(u,c="avatar"){return `<div class="${c} click" onclick="openProfile('${u.id}')" style="background:${u.color}">${initials(u)}</div>`}
+function check(u){return u.followers.length>=100?`<span class="check">✓</span>`:""}
+function pop(t){toast.innerHTML=`<div class="toast">${esc(t)}</div>`;setTimeout(()=>toast.innerHTML="",1800)}
+
+function authTab(t){
+  loginTab.classList.toggle("active",t==="login");signupTab.classList.toggle("active",t==="signup");
+  loginBox.classList.toggle("hidden",t!=="login");signupBox.classList.toggle("hidden",t!=="signup");authMsg.textContent="";
+}
+function register(){
+  const display=regDisplay.value.trim(), username=clean(regUser.value), pass=regPass.value;
+  if(!display||!username||!pass)return authMsg.textContent="Fill in all fields.";
+  if(username.length<3)return authMsg.textContent="Username needs 3+ characters.";
+  if(state.used.includes(username))return authMsg.textContent="Username already exists.";
+  const colors=["#635bff","#12b886","#ff4d6d","#2f9bff","#ff8c42"];
+  const u={id:uid(),display,username,pass,bio:"New on Vibly.",color:colors[Math.floor(Math.random()*colors.length)],followers:[],following:[],joined:now(),verified:false};
+  state.users.push(u);state.used.push(username);currentUser=u.id;localStorage.setItem("vibly_current_user",currentUser);save();boot();
+}
+function login(){
+  const u=state.users.find(x=>x.username===clean(loginUser.value)&&x.pass===loginPass.value);
+  if(!u)return authMsg.textContent="Wrong username or password.";
+  currentUser=u.id;localStorage.setItem("vibly_current_user",currentUser);boot();
+}
+function logout(){currentUser=null;localStorage.removeItem("vibly_current_user");boot()}
+
+function boot(){
+  document.documentElement.dataset.theme=state.theme;
+  const logged=!!me();
+  auth.classList.toggle("hidden",logged);app.classList.toggle("hidden",!logged);mobileNav.classList.toggle("hidden",!logged);
+  if(!logged)return;
+  if(!profileId)profileId=currentUser;
+  renderNav();renderAll();
+}
+function renderNav(){
+  const items=[["home","⌂","Home"],["search","⌕","Search"],["create","+","Create"],["profile","◉","Profile"],["alerts","◇","Alerts"],["settings","⚙","Settings"]];
+  nav.innerHTML=items.map(i=>`<button class="${page===i[0]?"active":""}" onclick="showPage('${i[0]}')">${i[1]} ${i[2]}</button>`).join("");
+  mobileNav.innerHTML=items.slice(0,5).map(i=>`<button class="${page===i[0]?"active":""}" onclick="showPage('${i[0]}')">${i[1]}<span>${i[2]}</span></button>`).join("");
+}
+function showPage(p){
+  page=p;document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));document.getElementById(p+"Page").classList.remove("hidden");
+  if(p==="profile"&&!profileId)profileId=currentUser;
+  title.textContent=p==="alerts"?"Alerts":p[0].toUpperCase()+p.slice(1);
+  renderNav();renderAll();scrollTo({top:0,behavior:"smooth"});
+}
+function renderAll(){
+  if(!me())return;
+  hello.textContent="@"+me().username+" · saved locally";
+  pruneStories();renderStories();renderFeed();renderSearch();renderProfile();renderAlerts();renderSettings();
+}
+
+function createTab(t){
+  postCreateTab.classList.toggle("active",t==="post");storyCreateTab.classList.toggle("active",t==="story");
+  postCreator.classList.toggle("hidden",t!=="post");storyCreator.classList.toggle("hidden",t!=="story");
+}
+function setEffect(e,b){effect=e;document.querySelectorAll(".effect").forEach(x=>x.classList.remove("active"));b.classList.add("active")}
+function setStoryEffect(e,b){storyEffect=e;document.querySelectorAll(".storyEffect").forEach(x=>x.classList.remove("active"));b.classList.add("active")}
+
+function createPost(){
+  const text=postText.value.trim(), img=postImage.value.trim();
+  if(!text&&!img)return pop("Add text or image");
+  state.posts.unshift({id:uid(),userId:me().id,text,img,effect,likes:[],reposts:[],saves:[],comments:[],time:now()});
+  postText.value="";postImage.value="";save();showPage("home");pop("Posted");
+}
+function createStory(){
+  const text=storyText.value.trim();
+  if(!text)return pop("Write a story");
+  state.stories.unshift({id:uid(),userId:me().id,text,effect:storyEffect,created:Date.now()});
+  storyText.value="";save();showPage("home");pop("Story added");
+}
+
+function renderStories(){
+  const add=`<div class="story" onclick="showPage('create')"><div class="ring"><div class="face" style="background:${me().color}">+</div></div><span>Add</span></div>`;
+  const list=state.stories.map(s=>{const u=user(s.userId);return u?`<div class="story" onclick="openStory('${s.id}')"><div class="ring"><div class="face" style="background:${u.color}">${initials(u)}</div></div><span>@${esc(u.username)}</span></div>`:""}).join("");
+  storyBar.innerHTML=add+list;
+}
+function pruneStories(){state.stories=state.stories.filter(s=>Date.now()-s.created<86400000)}
+function openStory(id){
+  const s=state.stories.find(x=>x.id===id), u=user(s.userId); if(!s||!u)return;
+  modal.innerHTML=`<div class="modal" onclick="closeModal(event)"><div class="storybox" style="background:${gradients[s.effect]||gradients.aurora}" onclick="event.stopPropagation()">
+  <div class="progress"><i></i></div><button class="close" onclick="modal.innerHTML=''">×</button><div class="row">${avatar(u)}<b>${esc(u.display)} ${check(u)}</b></div>
+  <div class="storytext">${esc(s.text)}</div></div></div>`;
+  setTimeout(()=>{if(modal.innerHTML)modal.innerHTML=""},5000);
+}
+function closeModal(e){if(e.target.classList.contains("modal"))modal.innerHTML=""}
+
+function renderFeed(){feed.innerHTML=state.posts.map(postHTML).join("")||`<div class="panel card">No posts yet.</div>`}
+function postHTML(p){
+  const u=user(p.userId), m=me(); if(!u)return "";
+  const media=p.img?`<div class="media"><img src="${esc(p.img)}" onerror="this.parentElement.innerHTML='Image could not load';"></div>`:`<div class="media" style="background:${gradients[p.effect]||gradients.aurora}">${esc((p.text||"Vibly").slice(0,70))}</div>`;
+  return `<article class="post card">
+    <div class="post-head">
+      <div class="row">${avatar(u)}<div><div class="name click" onclick="openProfile('${u.id}')">${esc(u.display)} ${check(u)}</div><div class="user">@${esc(u.username)} · ${esc(p.time)}</div></div></div>
+      ${p.userId===m.id?`<button class="action" onclick="deletePost('${p.id}')">Delete</button>`:""}
+    </div>
+    <p class="text">${tags(esc(p.text))}</p>${media}
+    <div class="actions">
+      <button class="action ${p.likes.includes(m.id)?"liked":""}" onclick="likePost('${p.id}')">♥ ${p.likes.length}</button>
+      <button class="action" onclick="repost('${p.id}')">↻ ${p.reposts.length}</button>
+      <button class="action" onclick="focusComment('${p.id}')">💬 ${p.comments.length}</button>
+      <button class="action ${p.saves.includes(m.id)?"saved":""}" onclick="savePost('${p.id}')">${p.saves.includes(m.id)?"★":"☆"}</button>
+    </div>
+    <div class="comments">
+      ${p.comments.map(c=>{const cu=user(c.userId);return cu?`<div class="comment"><b class="click" onclick="openProfile('${cu.id}')">@${esc(cu.username)}</b> ${esc(c.text)}</div>`:""}).join("")}
+      <div class="row"><input class="input" id="c-${p.id}" placeholder="Comment"><button class="btn ghost" onclick="commentPost('${p.id}')">Send</button></div>
+    </div>
+  </article>`;
+}
+function tags(s){return s.replace(/#[a-z0-9_]+/gi,m=>`<b style="color:var(--accent)">${m}</b>`)}
+function toggle(a,v){const i=a.indexOf(v);i>-1?a.splice(i,1):a.push(v)}
+function note(to,text){if(to!==me().id)state.notes.unshift({id:uid(),to,text,time:now()})}
+function likePost(id){const p=state.posts.find(x=>x.id===id), had=p.likes.includes(me().id);toggle(p.likes,me().id);if(!had)note(p.userId,me().display+" liked your post.");save();renderAll()}
+function repost(id){const p=state.posts.find(x=>x.id===id), had=p.reposts.includes(me().id);toggle(p.reposts,me().id);if(!had)note(p.userId,me().display+" reposted your post.");save();renderAll()}
+function savePost(id){toggle(state.posts.find(x=>x.id===id).saves,me().id);save();renderAll()}
+function focusComment(id){document.getElementById("c-"+id)?.focus()}
+function commentPost(id){const p=state.posts.find(x=>x.id===id), input=document.getElementById("c-"+id), text=input.value.trim();if(!text)return;p.comments.push({id:uid(),userId:me().id,text,time:now()});note(p.userId,me().display+" commented on your post.");input.value="";save();renderAll()}
+function deletePost(id){if(confirm("Delete post?")){state.posts=state.posts.filter(p=>p.id!==id);save();renderAll()}}
+
+function openProfile(id){profileId=id;showPage("profile")}
+function renderProfile(){
+  const u=user(profileId||currentUser)||me(), m=me(), own=u.id===m.id, following=m.following.includes(u.id);
+  const posts=state.posts.filter(p=>p.userId===u.id), liked=state.posts.filter(p=>p.likes.includes(u.id)), saved=state.posts.filter(p=>p.saves.includes(u.id));
+  profilePage.innerHTML=`<div class="panel card">
+    <div class="row" style="align-items:flex-start">${avatar(u,"avatar big")}<div><h2 style="margin:0">${esc(u.display)} ${check(u)}</h2><div class="user">@${esc(u.username)}</div><p>${esc(u.bio)}</p>
+    ${own?`<button class="btn ghost" onclick="editProfile()">Edit</button>`:`<button class="btn ${following?"ghost":""}" onclick="follow('${u.id}')">${following?"Following":"Follow"}</button>`}</div></div><br>
+    <div class="row"><div class="stat"><b>${u.followers.length}</b><br><span class="small">Followers</span></div><div class="stat"><b>${u.following.length}</b><br><span class="small">Following</span></div><div class="stat"><b>${posts.length}</b><br><span class="small">Posts</span></div></div>
+    <p class="small">Verified automatically at 100 followers.</p>
+  </div>
+  <div id="editBox" class="panel card hidden"><input class="input" id="editDisplay" value="${esc(m.display)}"><br><br><textarea id="editBio">${esc(m.bio)}</textarea><br><br><input class="input" id="editColor" type="color" value="${m.color}"><br><br><button class="btn" onclick="saveProfile()">Save profile</button></div>
+  <div class="tabs"><button class="tab active" onclick="profileTab('posts',this)">Posts</button><button class="tab" onclick="profileTab('liked',this)">Liked</button>${own?`<button class="tab" onclick="profileTab('saved',this)">Saved</button>`:""}</div>
+  <div id="profilePosts">${posts.map(postHTML).join("")||`<div class="panel card">No posts.</div>`}</div>
+  <div id="profileLiked" class="hidden">${liked.map(postHTML).join("")||`<div class="panel card">No liked posts.</div>`}</div>
+  <div id="profileSaved" class="hidden">${saved.map(postHTML).join("")||`<div class="panel card">No saved posts.</div>`}</div>`;
+}
+function editProfile(){editBox.classList.toggle("hidden")}
+function saveProfile(){me().display=editDisplay.value.trim()||me().display;me().bio=editBio.value.trim();me().color=editColor.value;save();renderAll();pop("Profile saved")}
+function profileTab(t,b){["Posts","Liked","Saved"].forEach(x=>{let e=document.getElementById("profile"+x);if(e)e.classList.add("hidden")});document.getElementById("profile"+t[0].toUpperCase()+t.slice(1)).classList.remove("hidden");b.parentElement.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active")}
+function follow(id){const m=me(), u=user(id);if(!u||u.id===m.id)return;if(m.following.includes(id)){m.following=m.following.filter(x=>x!==id);u.followers=u.followers.filter(x=>x!==m.id)}else{m.following.push(id);u.followers.push(m.id);note(id,m.display+" followed you.")}save();renderAll()}
+
+function renderSearch(){
+  if(!searchResults)return;
+  const q=(searchInput?.value||"").toLowerCase();
+  const users=state.users.filter(u=>(u.username+" "+u.display+" "+u.bio).toLowerCase().includes(q));
+  const posts=state.posts.filter(p=>p.text.toLowerCase().includes(q)||(user(p.userId)?.username||"").includes(q));
+  searchResults.innerHTML=`<h3>People</h3><div class="grid">${users.map(userCard).join("")||`<div class="panel card">No users.</div>`}</div><h3>Posts</h3>${posts.map(postHTML).join("")||`<div class="panel card">No posts.</div>`}`;
+}
+function userCard(u){return `<div class="user-card card"><div class="row">${avatar(u)}<div><b class="click" onclick="openProfile('${u.id}')">${esc(u.display)} ${check(u)}</b><div class="user">@${esc(u.username)}</div></div></div><p class="small">${esc(u.bio)}</p><button class="btn ghost" onclick="openProfile('${u.id}')">Open</button></div>`}
+
+function renderAlerts(){const notes=state.notes.filter(n=>n.to===me().id);alertsPage.innerHTML=`<div class="panel card"><h3>Alerts</h3><button class="btn ghost" onclick="clearAlerts()">Clear</button></div>${notes.map(n=>`<div class="panel card"><b>${esc(n.text)}</b><div class="small">${esc(n.time)}</div></div>`).join("")||`<div class="panel card">No alerts.</div>`}`}
+function clearAlerts(){state.notes=state.notes.filter(n=>n.to!==me().id);save();renderAll()}
+function renderSettings(){settingsPage.innerHTML=`<div class="panel card"><h3>Settings</h3><button class="btn ghost" onclick="theme()">Dark / Light</button><br><br><button class="btn ghost" onclick="exportData()">Export saved data</button><br><br><button class="btn danger" onclick="clearData()">Clear platform data</button><p class="small">Without a backend, data saves only on this browser/device.</p></div>`}
+function theme(){state.theme=state.theme==="dark"?"light":"dark";save();boot()}
+function exportData(){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:"application/json"}));a.download="vibly-data.json";a.click();URL.revokeObjectURL(a.href)}
+function clearData(){if(confirm("Clear every saved user, post, story, and setting?")){localStorage.removeItem(KEY);localStorage.removeItem("vibly_current_user");state=load();currentUser=null;boot()}}
+
+boot();
+</script>
+</body>
+</html>
